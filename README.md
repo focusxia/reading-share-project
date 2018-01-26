@@ -1,3 +1,3 @@
 # reading-share-project
-book management 
-customizing books according to user preferences
+  book management 
+  customizing books according to user preferences
