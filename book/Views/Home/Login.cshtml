@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = null;
+}
+
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>书单管理系统</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="../../Content/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="../../Content/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="../../Content/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Content/assets/css/admin.css">
+    <link rel="stylesheet" href="../../Content/assets/css/app.css">
+    <link href="../../Content/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .error {
+            color:#cc0b0b;
+        }
+    </style>
+
+</head>
+
+<body data-type="login">
+    <div class="am-g myapp-login">
+        <div class="myapp-login-logo-block  tpl-login-max">
+            <div class="myapp-login-logo-text">
+                <div class="myapp-login-logo-text">
+                    书单管理系统<i class="am-icon-skyatlas"></i>
+                </div>
+            </div>
+            <div class="am-u-sm-10 login-am-center">
+                <form class="am-form" id="LoginForm" action="/Home/Login">
+                    <fieldset>
+                        <div class="am-form-group">
+                            <input type="text" name="UserName" class="" id="UserName" placeholder="输入用户名">
+                        </div>
+                        <div class="am-form-group">
+                            <input type="password" name="Password" class="" id="Password" placeholder="输入密码">
+                        </div>
+                        <p>
+                            <button type="button" id="LoginBtn" class="am-btn am-btn-default">登录</button>
+                        </p>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../Content/assets/js/jquery.min.js"></script>
+    <script src="../../Scripts/jquery.validate.min.js"></script>
+    <script src="../../Content/assets/js/amazeui.min.js"></script>
+    <script src="../../Content/assets/js/app.js"></script>
+    <script src="../../Content/dist/js/bootstrap.min.js"></script>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $(function () {
+        $("#LoginBtn").bind("click", function () {
+            function valide() {
+                return $("#LoginForm").validate({
+                    ignore: "",
+                    rules: {
+                        UserName: {
+                            required: true
+                        },
+                        Password: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        UserName: "请您输入用户名",
+                        Password: "请您输入密码"
+                    }
+                }).form();
+            }
+
+            debugger;
+            if (valide()) {
+                $.ajax({
+                    url: "/Home/Login",
+                    type: "post",
+                    data: { UserName: $("#UserName").val(), Password: $("#Password").val() },
+                    async: false,
+                    success: function (data) {
+                        debugger;
+                        if (data.isSuccess) {
+                            location.href = "/Home/BookList";
+                        } else {
+                            $(".modal-body").html("用户名或密码不正确");
+                            $('#myModal').modal('show');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

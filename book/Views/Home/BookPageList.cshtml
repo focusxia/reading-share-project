@@ -1,0 +1,423 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_BookLayout.cshtml";
+}
+<style>
+    .file {
+        position: relative;
+        display: inline-block;
+        background: #4db14d;
+        padding: 0 10px;
+        color: #fff;
+        text-decoration: none;
+        text-indent: 0;
+        height: 28px;
+        line-height: 28px;
+        font-size: 12px;
+    }
+
+        .file input {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .file:link {
+            background-color: #4aaa4a;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .file:visited {
+            background-color: #4aaa4a;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .file:hover {
+            background-color: #4aaa4a;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .file:active {
+            background-color: #4aaa4a;
+            text-decoration: none;
+            color: #fff;
+        }
+</style>
+<div class="tpl-content-wrapper">
+    <div class="tpl-content-page-title">
+        书单列表管理
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="/Home/BookList" class="am-icon-home">首页</a></li>
+        <li class="am-active">书单列表</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="tpl-block">
+            <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-btn-group am-btn-group-xs">
+                        <form id="bookPageExcelForm" method="post" enctype="multipart/form-data" action="/Home/ImportExcel">
+                            <a id="bookPageExcelBtn" href="javascript:;" class="file">
+                                <span class="am-icon-plus"></span>导入数据
+                                    <input type="file" name="bookPageExcel" id="bookPageExcel">
+                            </a>
+                        </form>
+                    </div>
+                    <div class="am-btn-group am-btn-group-xs">
+                        <form enctype="multipart/form-data" id="file-form">
+                            <button style="font-size: 12px;" id="exportExcel" type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span>导出数据</button>
+                        </form>
+                    </div>
+                    <div class="am-btn-group am-btn-group-xs">
+                        <button id="deleteBtn" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span>删除</button>
+                    </div>
+                    <div class="am-btn-group am-btn-group-xs">
+                        <button id="deleteAllBtn" type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span>全部删除</button>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-u-md-1">
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-5 am-input-group am-datepicker-date" data-am-datepicker="{format: 'yyyy-mm-dd'}">
+                        <input value='@DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")' type="text" id="startDate" class="am-form-field" placeholder="日历组件" data-am-datepicker="{theme: 'success'}" readonly/>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-5 am-input-group am-datepicker-date" data-am-datepicker="{format: 'yyyy-mm-dd'}">
+                        <input value='@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")' id="endDate" type="text" class="am-form-field" placeholder="日历组件" data-am-datepicker="{theme: 'success'}" readonly/>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-1">
+                        <span class="am-input-group-btn">
+                            <button class="am-btn  am-btn-default am-btn-success tpl-am-btn-success am-icon-search" id="searchBtn" type="button"></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="am-u-sm-12">
+                <form class="am-form" style="width: 100%; overflow: auto;">
+                    <table style="width: 1400px;" id="bookTable" class="am-table am-table-striped am-table-hover table-main">
+                        <thead>
+                            <tr>
+                                <th class="table-check" style="width: 70px;">
+                                    <input type="checkbox" id="allCheck" name="allCheck" class="tpl-table-fz-check"><label for="allCheck">全选</label></th>
+                                <th class="">序号</th>
+                                <th class="">微信公众号</th>
+                                <th class="">主食阅读</th>
+                                <th class="">美食阅读 </th>
+                                <th class="">蔬果阅读</th>
+                                <th class="">甜品阅读</th>
+                                <th class="">微信昵称 </th>
+                                <th class="">微信ID</th>
+                                <th class="">链接</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="am-cf">
+                        <div class="am-fl">
+                            <div id="pageList" style="text-align: center">
+                                <ul style="font-size: 15px;" id="pageLimit"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="okModel" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">提示</h4>
+      </div>
+      <div class="modal-body">
+        <p>是否全部删除书单数据？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="deleteAllBtnModel">确认</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<input value="@ViewBag.LJ" type="hidden" id="ljvalue" />
+<script src="../../Scripts/jqueryForm.js"></script>
+<script src="../../Content/jquery-zclip-master/clipboard.min.js"></script>
+<script type="text/javascript">
+    $("#deleteBtn").bind("click", function () {
+        var isSelect = false;
+        var ids = [];
+        $(".chirdCheck").each(function () {
+            if (this.checked) {
+                isSelect = true;
+                ids.push($(this).attr("val"));
+            }
+        });
+        debugger;
+        if (isSelect) {
+            $.ajax({
+                url: "/Home/DeletePage",
+                type: "post",
+                data: { ids: JSON.stringify(ids), type: "single" },
+                success: function (data) {
+                    initData(1);
+
+                    if (data.isSuccess) {
+                        $("#myModal .modal-body").html("删除成功");
+                        $('#myModal').modal('show');
+                    } else {
+                        $("#myModal .modal-body").html("<span style='color:red;'>" + data.message + "</span>");
+                        $('#myModal').modal('show');
+                    }
+                },
+                error: function (e) {
+                    initData(1);
+                }
+            });
+        } else {
+            $("#myModal .modal-body").html("请您选择要删除的书单");
+            $('#myModal').modal('show');
+        }
+    });
+
+
+    $("#deleteAllBtn").bind("click", function () {
+        $('#okModel').modal('show');
+    });
+
+    $("#deleteAllBtnModel").bind("click", function () {
+        $('#okModel').modal('hide');
+        debugger;
+        $.ajax({
+            url: "/Home/DeletePage",
+            type: "post",
+            data: { ids: "", type: "all" },
+            success: function (data) {
+                initData(1);
+                $('#okModel').modal('hide');
+            },
+            error: function (e) {
+                initData(1);
+                $('#okModel').modal('hide');
+            }
+        });
+    });
+
+    $("#allCheck").bind("change", function () {
+        debugger;
+        if (this.checked) {
+            $(".chirdCheck").each(function () {
+                this.checked = true;
+            });
+        } else {
+            $(".chirdCheck").each(function () {
+                this.checked = false;
+            });
+        }
+    });
+
+    $("#exportExcel").bind("click", function () {
+        debugger;
+        if ($("#startDate").val() >= $("#endDate").val()) {
+            $("#myModal .modal-body").html("开始时间必须小于结束时间");
+            $('#myModal').modal('show');
+            return;
+        }
+        $('#file-form').ajaxSubmit({
+            type: 'POST', // HTTP请求方式
+            url: '/Home/ExportExcel', // 请求的URL地址
+            data: { StartDate: $("#startDate").val(), EndDate: $("#endDate").val() },
+            dataType: 'json', // 服务器返回数据转换成的类型
+            success: function (data, responseStatus) {
+                debugger;
+                if (data == "") {
+                    $("#myModal .modal-body").html("暂无数据");
+                    $('#myModal').modal('show');
+                } else {
+                    location.href = location.origin + '/' + data;
+                }
+            },
+            error: function (da) {
+                $("#myModal .modal-body").html("暂无数据");
+                $('#myModal').modal('show');
+            }
+        });
+    });
+    function fz() {
+        var clipboard = new Clipboard('.fzlj', {
+            text: function (e) {
+                return $(e).attr("toH");
+            }
+        });
+    }
+
+    $("#searchBtn").bind("click", function () {
+        initData(1);
+    });
+
+    var pageSize = 15;
+    initData(1);
+    $("#bookPageExcelBtn").bind("change", function () {
+        $("#loading").show();
+        var form = new FormData(document.getElementById("bookPageExcelForm"));
+        $.ajax({
+            url: "/Home/ImportExcel",
+            type: "post",
+            data: form,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                initData(1);
+                debugger;
+                var file = $("#bookPageExcel");
+                file.after(file.clone().val(""));
+                file.remove();
+                $("#loading").hide();
+
+                if (data.isSuccess) {
+                    $("#myModal .modal-body").html("导入成功");
+                    $('#myModal').modal('show');
+                } else {
+                    $("#myModal .modal-body").html("<span style='color:red;'>" + data.message + "</span>");
+                    $('#myModal').modal('show');
+                }
+            },
+            error: function (e) {
+                var file = $("#bookPageExcel");
+                file.after(file.clone().val(""));
+                file.remove();
+                $("#loading").hide();
+            }
+        });
+    });
+
+    function initData(pageIndex) {
+        document.getElementById("allCheck").checked = false;
+        if ($("#startDate").val() >= $("#endDate").val()) {
+            $("#myModal .modal-body").html("开始时间必须小于结束时间");
+            $('#myModal').modal('show');
+            return;
+        }
+        $("#loading").show();
+        debugger;
+        $.ajax({
+            type: 'POST',
+            url: '/Home/GetBookPageListAjax',
+            data: { StartDate: $("#startDate").val(), EndDate: $("#endDate").val(), PageIndex: pageIndex, PageSize: pageSize },
+            success: function (data) {
+                initTable(data.model);
+                fz();
+                //initPage(data.recordCount, pageIndex);
+                debugger;
+                var pageCount = Math.ceil(data.recordCount / pageSize);
+                $('#pageLimit').html("");
+                $('#pageLimit').bootstrapPaginator({
+                    currentPage: pageIndex,//当前的请求页面。
+                    totalPages: pageCount,//一共多少页。
+                    size: "normal",//应该是页眉的大小。
+                    bootstrapMajorVersion: 3,//bootstrap的版本要求。
+                    alignment: "right",
+                    numberOfPages: 5,//一页列出多少数据。
+                    itemTexts: function (type, page, current) {//如下的代码是将页眉显示的中文显示我们自定义的中文。
+                        switch (type) {
+                            case "first": return "首页";
+                            case "prev": return "上一页";
+                            case "next": return "下一页";
+                            case "last": return "末页";
+                            case "page": return page;
+                        }
+                    },
+                    onPageClicked: function (event, originalEvent, type, page) {
+                        debugger;
+                        $("#loading").show();
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/GetBookPageListAjax',
+                            data: { StartDate: $("#startDate").val(), EndDate: $("#endDate").val(), PageIndex: page, PageSize: pageSize },
+                            success: function (data) {
+                                initTable(data.model);
+                                $("#loading").hide();
+                            }
+                        });
+                    }
+                });
+
+                $("#loading").hide();
+            },
+            error: function () {
+                $("#loading").hide();
+            }
+        });
+    }
+    function initTable(datas) {
+        $("#bookTable").find("tbody").html("");
+        if (datas == null || datas.length == 0) {
+            $("#loading").hide();
+        }
+
+        for (var i = 0; i < datas.length; i++) {
+            var href = 'http://www.learnercode.com/Home/BookPage?pageId=' + datas[i].Id;
+            debugger;
+            var tr = '<tr>'
+                + '<td>'
+                + '<input class="chirdCheck" val="' + datas[i].Id + '" type="checkbox"></td>'
+                + '<td>' + datas[i].SerialNumber + '</td>'
+                + '<td>' + datas[i].WXType + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].MainReadTypeName2 + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].FoodTypeName + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].FruitsTypeName + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].SweetTypeName + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].WXNickName + '</td>'
+                + '<td class="am-hide-sm-only">' + datas[i].WXId + '</td>'
+                + '<td class="am-hide-sm-only"><a toH=' + $("#ljvalue").val() + href + ' href="javascript:void(0)" class="fzlj am-btn am-btn-default am-btn-xs am-text-secondary">'
+                + '<span class="am-icon-pencil-square-o"></span>复制</a><a style="margin-left: 20px;" target="_blank" href="' + href + '" class="fzlj am-btn am-btn-default am-btn-xs am-text-secondary">'
+                + '<span class="am-icon-pencil-square-o"></span>书单</a></td>'
+                //+ '<td><a target="_blank" href="'
+                //+ href
+                //+ '">' + href + '</a></td>'
+                + '</tr>';
+
+            $("#bookTable").find("tbody").append(tr);
+        }
+    }
+    //function initPage(recordCount, pageIndex) {
+    //    var pageCount = Math.ceil(recordCount / pageSize);
+    //    $("#pageList").html("");
+    //    for (var i = 0; i < pageCount; i++) {
+    //        var page = '';
+    //        if (pageIndex == (i + 1)) {
+    //            page = '<li class="am-active"><a href="javascript:void(0)" onclick="initData(' + (i + 1) + ', ' + pageSize + ')">' + (i + 1) + '</a></li>';
+    //        } else {
+    //            page = '<li><a href="javascript:void(0)" onclick="initData(' + (i + 1) + ', ' + pageSize + ')">' + (i + 1) + '</a></li>';
+    //        }
+
+    //        $("#pageList").append(page);
+    //    }
+    //}
+</script>

@@ -1,0 +1,138 @@
+﻿@model book.Models.WXBGModel
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_BookLayout.cshtml";
+}
+
+<style>
+    .error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
+<div class="tpl-content-wrapper">
+    <div class="tpl-content-page-title">
+        书籍列表管理
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+        <li><a href="#">我的列表</a></li>
+        <li class="am-active">书单二维码</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                书单二维码配置
+            </div>
+        </div>
+        <div class="tpl-block ">
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form id="SetPageForm" class="am-form am-form-horizontal" action="/Home/SetWXBG" method="post">
+                        <div class="am-form-group">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">微信昵称</label>
+                            <div class="am-u-sm-9">
+                                <input type="hidden" value="@Model.Id" id="Id" name="Id" placeholder="">
+                                <input type="text" value="@Model.WXName" id="WXName" name="WXName" placeholder="">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">微信二维码图片</label>
+                            <div class="am-u-sm-9">
+                                <div class="am-form-group am-form-file">
+                                    <div class="tpl-form-file-img">
+                                        <img id="bookImg" src="@Model.WXBG" alt="">
+                                    </div>
+                                    <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                        <i class="am-icon-cloud-upload"></i>添加微信二维码图片</button>
+                                    <input id="doc-form-file" type="file" multiple="">
+                                </div>
+                                <input id="WXBG" value="@Model.WXBG" type="hidden" name="WXBG" />
+                                <script type="text/javascript">
+                                    document.getElementById("doc-form-file").onchange = function () {
+                                        gen_base64();
+                                    };
+                                    function $_(id) {
+                                        return document.getElementById(id);
+                                    }
+                                    function gen_base64() {
+                                        var file = $_('doc-form-file').files[0];
+                                        if (file.type.indexOf("jpeg") > 0 || file.type.indexOf("jpg") > 0 || file.type.indexOf("png") > 0 || file.type.indexOf("gif") > 0) {
+                                            r = new FileReader();  //本地预览
+                                            r.onload = function () {
+                                                $_('bookImg').src = r.result;
+                                                $_('WXBG').value = r.result;
+                                            }
+                                            r.readAsDataURL(file);    //Base64
+                                        } else {
+                                            alert("请您上传正确的图片格式");
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button id="SetPageBtn" type="button" class="am-btn am-btn-primary">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        $("#SetPageBtn").bind("click", function () {
+            function valide() {
+                return $("#SetPageForm").validate({
+                    ignore: "",
+                    rules: {
+                        WXName: {
+                            required: true
+                        },
+                        WXBG: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        WXName: "请您填写书名",
+                        WXBG: "请您添加微信二维码图片"
+                    },
+                }).form();
+            }
+
+            debugger;
+            if (valide()) {
+                $.ajax({
+                    url: "/Home/SetWXBG",
+                    type: "post",
+                    data: { Id: $("#Id").val(), WXName: $("#WXName").val(), WXBG: $("#WXBG").val() },
+                    async: false,
+                    success: function (data) {
+                        $(".modal-body").html("添加成功");
+                        $('#myModal').modal('show');
+                    }
+                });
+            }
+        });
+    });
+</script>

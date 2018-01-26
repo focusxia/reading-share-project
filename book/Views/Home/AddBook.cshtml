@@ -1,0 +1,271 @@
+﻿@model book.Models.Book
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_BookLayout.cshtml";
+    var bookList2 = ViewBag.bookTypeList2 as IEnumerable<SelectListItem>;
+}
+
+<style>
+    .error {
+        color: red;
+        font-size: 14px;
+    }
+
+    .bookType2 {
+        display: none;
+    }
+</style>
+<div class="tpl-content-wrapper">
+    <div class="tpl-content-page-title">
+        书籍列表管理
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="/Home/BookList" class="am-icon-home">首页</a></li>
+        <li><a href="/Home/BookList">我的列表</a></li>
+        <li class="am-active">添加书籍</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                添加书籍
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        <i class="am-icon-search"></i>
+                        <input type="text" class="form-control form-control-solid" placeholder="搜索...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-block ">
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form id="addBookForm" class="am-form am-form-horizontal" action="/Home/AddBook" method="post">
+                        <div class="am-form-group">
+                            <label for="user-name" class="am-u-sm-3 am-form-label">书名</label>
+                            <div class="am-u-sm-9">
+                                <input type="hidden" value="@Model.Id" id="Id" name="Id">
+                                <input type="text" value="@Model.BookName" id="BookName" name="BookName" placeholder="书名">
+                            </div>
+                        </div>
+                        <div class="am-form-group bookType">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">类型</label>
+                            <div class="am-u-sm-9">
+                                @Html.DropDownList("BookTypeId", ViewBag.bookTypeList as IEnumerable<SelectListItem>)
+                            </div>
+                        </div>
+                        <div class="am-form-group bookType1">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">二级分类</label>
+                            <div class="am-u-sm-9">
+                                @Html.DropDownList("BookTypeId1", ViewBag.bookTypeList1 as IEnumerable<SelectListItem>)
+                            </div>
+                        </div>
+                        <div class="am-form-group bookType2" style="@((bookList2 != null && bookList2.Count() > 0) ? "display:block;" : "display:none;")">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">三级分类</label>
+                            <div class="am-u-sm-9">
+                                @Html.DropDownList("BookTypeId2", ViewBag.bookTypeList2 as IEnumerable<SelectListItem>)
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">封面图</label>
+                            <div class="am-u-sm-9">
+                                <div class="am-form-group am-form-file">
+                                    <div class="tpl-form-file-img">
+                                        <img id="bookImg" src="@Model.ImageData" alt="">
+                                    </div>
+                                    <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                        <i class="am-icon-cloud-upload"></i>添加封面图片</button>
+                                    <input id="doc-form-file" type="file" multiple="">
+                                </div>
+                                <input id="ImageData" value="@Model.ImageData" type="hidden" name="ImageData" />
+                                <script type="text/javascript">
+                                    document.getElementById("doc-form-file").onchange = function () {
+                                        gen_base64();
+                                    };
+                                    function $_(id) {
+                                        return document.getElementById(id);
+                                    }
+                                    function gen_base64() {
+                                        var file = $_('doc-form-file').files[0];
+                                        if (file.type.indexOf("jpeg") > 0 || file.type.indexOf("jpg") > 0 || file.type.indexOf("png") > 0 || file.type.indexOf("gif") > 0) {
+                                            r = new FileReader();  //本地预览
+                                            r.onload = function () {
+                                                $_('bookImg').src = r.result;
+                                                $_('ImageData').value = r.result;
+                                            }
+                                            r.readAsDataURL(file);    //Base64
+                                        } else {
+                                            alert("请您上传正确的图片格式");
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">作者</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" value="@Model.Author" id="Author" name="Author" placeholder="">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">评分</label>
+                            <div class="am-u-sm-9">
+                                <input type="text" value="@Model.Score" id="Score" name="Score" placeholder="">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">内容简介</label>
+                            <div class="am-u-sm-9">
+                                <textarea class="" rows="5" name="BookDes" id="BookDes" placeholder="">@Model.BookDes</textarea>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-intro" class="am-u-sm-3 am-form-label">推荐理由</label>
+                            <div class="am-u-sm-9">
+                                <textarea class="" rows="5" name="RecommendReason" id="RecommendReason" placeholder="">@Model.RecommendReason</textarea>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        //自定义一个验证方法
+        var bkName = $("#BookName").val();
+        $.validator.addMethod(
+        "BookNameRepeat", //验证方法名称
+        function (value, element, param) {//验证规则
+            var res = true;
+            if (bkName == $("#BookName").val()) {
+                return true;
+            }
+
+            $.ajax({
+                url: "/Home/GetBookByBookName",
+                type: "post",
+                data: { bookName: $("#BookName").val() },
+                async: false,
+                success: function (data) {
+                    debugger;
+                    res = data.isSuccess;
+                }
+            });
+
+            return res;
+        }, '改书信息已添加，请不要重复添加1');
+
+        $("#addBookForm").validate({
+            ignore: "",
+            rules: {
+                BookName: {
+                    required: true,
+                    BookNameRepeat: true
+                },
+                BookTypeId: {
+                    required: true
+                },
+                BookTypeId1: {
+                    required: true
+                },
+                ImageData: {
+                    required: true
+                },
+                Author: {
+                    required: true
+                },
+                Score: {
+                    required: true,
+                    number: true
+                },
+                BookDes: {
+                    required: true
+                },
+                RecommendReason: {
+                    required: true
+                }
+            },
+            messages: {
+                BookName: {
+                    required: "请您填写书名",
+                    BookNameRepeat: "改书信息已添加，请不要重复添加"
+                },
+                BookTypeId: "请您选择书类别",
+                BookTypeId1: "请您选择书类别二级分类",
+                ImageData: "请您选择书封面",
+                Author: "请您填写作者",
+                Score: {
+                    required: "请您填写评分",
+                    number: "请您填写数字格式的评分"
+                },
+                BookDes: "请您填写内容简介",
+                RecommendReason: "请您填写推荐理由"
+            }
+        });
+
+        $("select[name='BookTypeId']").change(function () {
+            debugger;
+            var $this = $(this).val();
+            if ($this != "") {
+                $.ajax({
+                    url: '/Home/GetBookTypeListAjax?pBookTypeId=' + $(this).val(),
+                    type: 'GET',
+                    success: function (data) {
+                        if (data != undefined && data.model.length > 0) {
+                            var select = '';
+
+                            $("#BookTypeId1").html('<option selected="selected" value="">--请选择--</option>');
+                            for (var i = 0; i < data.model.length; i++) {
+                                $("#BookTypeId1").append('<option value="' + data.model[i].BookTypeId + '">' + data.model[i].BookTypeName + '</option>');
+                            }
+                            debugger;
+                            if ($this == "1") {
+                                $(".bookType2").show();
+                                $("#BookTypeId2").rules("add", { required: true, messages: { required: "请您选择三级分类" } });
+                            } else {
+                                $("#BookTypeId2").rules("remove");
+                                $(".bookType2").hide();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        $("select[name='BookTypeId1']").change(function () {
+            debugger;
+            if ($(this).val() != "") {
+                $.ajax({
+                    url: '/Home/GetBookTypeListAjax?pBookTypeId=' + $(this).val(),
+                    type: 'GET',
+                    success: function (data) {
+                        if (data != undefined && data.model.length > 0) {
+                            var select = '';
+                            $(".bookType2").show();
+                            $("#BookTypeId2").html('');
+                            $("#BookTypeId2").html('<option selected="selected" value="">--请选择--</option>');
+                            for (var i = 0; i < data.model.length; i++) {
+                                $("#BookTypeId2").append('<option value="' + data.model[i].BookTypeId + '">' + data.model[i].BookTypeName + '</option>');
+                            }
+
+                            $("#BookTypeId2").rules("add", { required: true, messages: { required: "请您选择三级分类" } });
+                        } else {
+                            $(".bookType2").hide();
+                            $("#BookTypeId2").rules("remove");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

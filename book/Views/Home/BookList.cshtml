@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_BookLayout.cshtml";
+}
+<div class="tpl-content-wrapper">
+    <div class="tpl-content-page-title">
+        书籍列表管理
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="/Home/BookList" class="am-icon-home">首页</a></li>
+        <li class="am-active">书籍列表</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="tpl-block">
+            <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-btn-toolbar">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <a href="/Home/AddBook" class="am-btn am-btn-default am-btn-success"><span class="am-icon-plus"></span>新增</a>
+                            @*                            <a class="am-btn am-btn-default am-btn-secondary"><span class="am-icon-save"></span>保存</a>
+                            <button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span>审核</button>
+                            <button type="button" class="am-btn am-btn-default am-btn-danger"><span class="am-icon-trash-o"></span>删除</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+                    <form class="am-form">
+                        <table id="bookTable" class="am-table am-table-striped am-table-hover table-main">
+                            <thead>
+                                <tr>
+                                    <th class="table-check">
+                                        <input type="checkbox" class="tpl-table-fz-check"></th>
+                                    <th class="">序号</th>
+                                    <th class="">书名</th>
+                                    <th class="">类别</th>
+                                    <th class="">作者</th>
+                                    <th class="">评分</th>
+                                    <th class="">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="am-cf">
+                            <div class="am-fl">
+                                <div id="pageList" style="text-align: center"> <ul style="font-size: 15px;" id="pageLimit"></ul> </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <div class="tpl-alert"></div>
+    </div>
+</div>
+
+@*弹窗*@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">提示</h4>
+            </div>
+            <div class="modal-body">
+                确认删除本条书籍数据？
+          <input type="hidden" value="" id="DeleteBookId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="DeleteBookInfo" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var pageSize = 15;
+    function initData(pageIndex) {
+        $("#loading").show();
+        $.ajax({
+            type: 'POST',
+            url: '/Home/GetBookListAjax',
+            data: { PageIndex: pageIndex, PageSize: pageSize },
+            success: function (data) {
+
+                initTable(data.model);
+                var pageCount = Math.ceil(data.recordCount / pageSize);
+                //initPage(data.recordCount, pageIndex);
+                $('#pageLimit').html("");
+                $('#pageLimit').bootstrapPaginator({
+                    currentPage: pageIndex,//当前的请求页面。
+                    totalPages: pageCount,//一共多少页。
+                    size: "normal",//应该是页眉的大小。
+                    bootstrapMajorVersion: 3,//bootstrap的版本要求。
+                    alignment: "right",
+                    numberOfPages: 5,//一页列出多少数据。
+                    itemTexts: function (type, page, current) {//如下的代码是将页眉显示的中文显示我们自定义的中文。
+                        switch (type) {
+                            case "first": return "首页";
+                            case "prev": return "上一页";
+                            case "next": return "下一页";
+                            case "last": return "末页";
+                            case "page": return page;
+                        }
+                    },
+                    onPageClicked: function (event, originalEvent, type, page) {
+                        debugger;
+                        $("#loading").show();
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/GetBookListAjax',
+                            data: { PageIndex: page, PageSize: pageSize },
+                            success: function (data) {
+                                initTable(data.model);
+                                $("#loading").hide();
+                            }
+                        });
+                    }
+                });
+
+                $("#loading").hide();
+            }
+        });
+    }
+    function initTable(datas) {
+        $("#bookTable").find("tbody").html("");
+        if (datas == null || datas.length == 0) {
+            $("#loading").hide();
+        }
+
+        for (var i = 0; i < datas.length; i++) {
+            var tr = '<tr>'
+            + '<td>'
+            + '<input type="checkbox"></td>'
+            + '<td>' + (i + 1) + '</td>'
+            + '<td>' + datas[i].BookName + '</td>'
+            + '<td>' + datas[i].BookTypeName + '>' + datas[i].BookTypeName1 +
+            (datas[i].BookTypeName2 != null ? ('>' + datas[i].BookTypeName2) : "")
+            + '</td>'
+            + '<td style="width: 20%" class="am-hide-sm-only">' + datas[i].Author + '</td>'
+            + '<td class="am-hide-sm-only">' + datas[i].Score + '</td>'
+            + '<td>'
+            + '<div class="am-btn-toolbar">'
+            + '<div class="am-btn-group am-btn-group-xs">'
+            + '<a href="/Home/AddBook?bookId=' + datas[i].Id + '" class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span>编辑</a>'
+            + '<button onclick="DeleteBook(' + datas[i].Id + ')" type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"><span class="am-icon-trash-o"></span>删除</button>'
+            + '</div>'
+            + '</div>'
+            + '</td>'
+            + '</tr>';
+
+            $("#bookTable").find("tbody").append(tr);
+        }
+    }
+
+    //function initPage(recordCount, pageIndex) {
+    //    var pageCount = Math.ceil(recordCount / pageSize);
+    //    $("#pageList").html("");
+
+    //    for (var i = 0; i < pageCount; i++) {
+    //        var page = '';
+    //        if (pageIndex == (i + 1)) {
+    //            page = '<li class="am-active"><a href="javascript:void(0)" onclick="initData(' + (i + 1) + ', ' + pageSize + ')">' + (i + 1) + '</a></li>';
+    //        } else {
+    //            page = '<li><a href="javascript:void(0)" onclick="initData(' + (i + 1) + ', ' + pageSize + ')">' + (i + 1) + '</a></li>';
+    //        }
+    //        $("#pageList").append(page);
+    //    }
+    //}
+
+    function DeleteBook(bookId) {
+        $('#myModal').modal('show');
+        $("#DeleteBookId").val(bookId);
+    }
+
+    $("#DeleteBookInfo").bind("click", function () {
+        var bookId = $("#DeleteBookId").val();
+        $.ajax({
+            type: 'POST',
+            url: '/Home/DeleteBookInfo',
+            data: { BookId: bookId },
+            success: function (data) {
+                $('#myModal').modal('hide');
+                initData(1);
+            }
+        });
+    });
+    initData(1);
+</script>

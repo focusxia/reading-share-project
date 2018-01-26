@@ -1,0 +1,592 @@
+﻿@model List<book.Models.Book>
+@{
+    Layout = null;
+    var page = ViewBag.Page as book.Models.FanHobbyInfo;
+    var wxewm = ViewBag.EWX as book.Models.WXBGModel;
+    var lj = ViewBag.LJ as book.Models.WXBGModel;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="x-rim-auto-match" content="none">
+
+    <meta id="metaDescription" name="description" content="">
+    <title>@lj.WXName</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+            background-color: #fff;
+            color: #2d2d2d;
+            font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Noto Sans","Noto Sans CJK SC","Microsoft YaHei","Apple Color Emoji","Segoe UI Symbol",Arial,sans-serif;
+            font-style: normal;
+        }
+
+
+        .mt10 {
+            margin-top: 10px;
+        }
+
+        .mt20 {
+            margin-top: 20px;
+        }
+
+        .mt30 {
+            margin-top: 30px;
+        }
+
+        .mt40 {
+            margin-top: 40px;
+        }
+
+        .container {
+            padding: 0 10px 10px;
+            -moz-box-shadow: 0 2px 4px #6c6d6f;
+            margin-bottom: 80px;
+            overflow: hidden;
+            background-color: #fff;
+            max-width: 750px;
+            margin: 0 auto;
+            -webkit-box-shadow: 0 2px 4px #6c6d6f;
+            box-shadow: 0 2px 4px #6c6d6f;
+            box-sizing: border-box;
+        }
+
+        .block {
+        }
+
+            .block .block-title {
+                padding: 3px;
+                border: 3px solid #000;
+            }
+
+                .block .block-title .title-content {
+                    text-align: center;
+                    font-weight: 700;
+                    height: 44px;
+                    line-height: 56px;
+                    color: rgb(62, 62, 62);
+                    box-sizing: border-box;
+                    font-size: 14px;
+                    line-height: 44px;
+                    border: 1px solid rgb(128, 128, 128);
+                }
+
+            .block .book-block {
+                margin-bottom: 20px;
+            }
+
+                .block .book-block .book-number {
+                    text-align: center;
+                    margin-top: 15px;
+                    position: static;
+                    box-sizing: border-box;
+                }
+
+                    .block .book-block .book-number .left {
+                        display: inline-block;
+                        vertical-align: middle;
+                        box-sizing: border-box;
+                    }
+
+                        .block .book-block .book-number .left .line {
+                            width: 3em;
+                            border-top: 2px solid rgb(127, 24, 25);
+                            display: inline-block;
+                            vertical-align: middle;
+                            box-sizing: border-box;
+                            margin-right: -5px;
+                        }
+
+                        .block .book-block .book-number .left .point {
+                            width: 6px;
+                            height: 6px;
+                            display: inline-block;
+                            vertical-align: middle;
+                            border-radius: 100%;
+                            background-color: rgb(127, 24, 25);
+                            box-sizing: border-box;
+                        }
+
+                    .block .book-block .book-number .center {
+                        display: inline-block;
+                        vertical-align: middle;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        font-size: 24px;
+                        min-width: 1.2em !important;
+                        box-sizing: border-box;
+                        color: rgb(62, 62, 62);
+                    }
+
+                    .block .book-block .book-number .right {
+                        display: inline-block;
+                        vertical-align: middle;
+                        box-sizing: border-box;
+                    }
+
+                        .block .book-block .book-number .right .line {
+                            width: 3em;
+                            border-top: 2px solid rgb(127, 24, 25);
+                            display: inline-block;
+                            vertical-align: middle;
+                            box-sizing: border-box;
+                            margin-left: -5px;
+                        }
+
+                        .block .book-block .book-number .right .point {
+                            width: 6px;
+                            height: 6px;
+                            display: inline-block;
+                            vertical-align: middle;
+                            border-radius: 100%;
+                            background-color: rgb(127, 24, 25);
+                            box-sizing: border-box;
+                        }
+
+                .block .book-block .book-name {
+                    font-weight: 700;
+                    text-align: center;
+                    margin-top: 15px;
+                    color: rgb(62, 62, 62);
+                    font-size: 16px;
+                }
+
+                .block .book-block .book-content {
+                    margin-top: 30px;
+                }
+
+                    .block .book-block .book-content .book-content-block {
+                    }
+
+                    .block .book-block .book-content .book-img {
+                        box-sizing: border-box;
+                        width: 65%;
+                        float: left;
+                    }
+
+                        .block .book-block .book-content .book-img > img {
+                            width: 100%;
+                            height: auto;
+                            padding-left: 12px;
+                            box-sizing: border-box;
+                        }
+
+                    .block .book-block .book-content .book-author {
+                        padding-left: 25px;
+                        box-sizing: border-box;
+                        width: 35%;
+                        float: left;
+                        font-size: 12px;
+                        text-align: center;
+                        margin-top: 80px;
+                        color: rgb(120, 124, 129);
+                    }
+
+                    .block .book-block .book-content .book-des {
+                        background: rgb(239, 239, 239);
+                        padding: 10px;
+                        margin-top: 20px;
+                        font-size: 15px;
+                        color: rgb(62, 62, 62);
+                    }
+
+                        .block .book-block .book-content .book-des .info {
+                            color: rgb(170, 31, 25);
+                            font-weight: 700;
+                        }
+
+        .container .top1 {
+        }
+
+        .container hr {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border: 0;
+            border-top: 1px solid #eee;
+            margin-left: 1.5em;
+            margin-right: 1.5em;
+            height: 0;
+            box-sizing: content-box;
+        }
+
+        .container .top1 .top-title {
+            font-size: 24px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .container .top1 .inscribe {
+            font-size: 14px;
+        }
+
+            .container .top1 .inscribe .date {
+                color: #6c6d6f;
+            }
+
+            .container .top1 .inscribe .nickname {
+                color: #45bcda;
+                margin-left: 5px;
+            }
+
+        .container .top2 {
+        }
+
+            .container .top2 .block-title {
+                padding: 3px;
+                border: 3px solid #000;
+            }
+
+            .container .top2 .title-content {
+                line-height: 1.6;
+                color: rgb(0, 0, 0);
+                box-sizing: border-box;
+                padding: 10px 5px;
+                border: 1px solid rgb(128, 128, 128);
+                font-size: 14px;
+            }
+
+        .container .bottom {
+        }
+
+            .container .bottom .block-title {
+                padding: 3px;
+                border: 3px solid #000;
+            }
+
+            .container .bottom .title-content {
+                line-height: 1.6;
+                color: rgb(62, 62, 62);
+                box-sizing: border-box;
+                padding: 10px 5px;
+                border: 1px solid rgb(128, 128, 128);
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+        .container .dzsd {
+            text-align: center;
+            font-size: 21px;
+            color: rgb(0, 0, 0);
+            letter-spacing: 15px;
+            box-sizing: border-box;
+            font-weight: 700;
+            padding-top: 30px;
+            padding-bottom: 10px;
+        }
+
+        .container .srwx {
+            text-align: center;
+            letter-spacing: 0px;
+            line-height: 1.6;
+            color: rgb(255, 255, 255);
+            box-sizing: border-box;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+            .container .srwx span {
+                background-color: rgb(254, 202, 0);
+            }
+
+        .container .ddpk {
+            text-align: center;
+            color: rgb(0, 0, 0);
+            box-sizing: border-box;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .container .wxbg {
+            margin-top: 25px;
+            text-align: center;
+            width: 100%;
+        }
+
+            .container .wxbg > div {
+                background: url(/Content/wxbg.png);
+                background-size: 100% auto;
+                background-position: center auto;
+                background-repeat: no-repeat;
+                margin: 0 auto;
+                text-align: center;
+                width: 60%;
+                padding: 4%;
+                box-sizing: border-box;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top1">
+            <div class="top-title">我的2018专属书单已出炉，一起来监督我！</div>
+            @*<div class="inscribe">
+                <span class="date">2018-1-4</span>
+                <span class="nickname">罗马❤假日</span>
+            </div>*@
+        </div>
+        <hr>
+        <div class="top2">
+            <div class="block-title">
+                <div class="title-content">
+                    这是为粉丝<span>👉</span>
+                    <span style="font-weight: 700; color: rgb(172, 53, 81);">@page.WXNickName</span>
+                    <span>👈</span>独家定制的私人书单，也是我们定制的第<span style="font-weight: 700; color: rgb(172, 53, 81);">@(page.SerialNumber)</span>份书单。请仔细阅读，尽量截图保存防止丢失，如果不会长文截图可私信联系我们，我们帮你截图。
+                </div>
+            </div>
+        </div>
+        <div class="block mt10">
+            <div class="block-title">
+                <div class="title-content">
+                    主食阅读
+                </div>
+            </div>
+            <div class="book-block">
+                <div class="book-number">
+                    <span class="left">
+                        <span class="line"></span>
+                        <span class="point"></span>
+                    </span>
+                    <span class="center">1</span>
+                    <span class="right">
+                        <span class="point"></span>
+                        <span class="line"></span>
+                    </span>
+                </div>
+                <div class="book-name">
+                    @Model[0].BookName
+                </div>
+                <div class="book-content">
+                    <div class="book-content-block">
+                        <div class="book-img">
+                            <img src="@Model[0].ImageData" />
+                        </div>
+                        <div class="book-author">
+                            <div>@Model[0].Author</div>
+                            <div>（著）</div>
+                            <div>评分：@Model[0].Score</div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="book-des">
+                        <div>
+                            <span class="info">内容简介</span>|
+                        <span>@Model[0].BookDes</span>
+                        </div>
+                        <div class="mt20">
+                            <span class="info">推荐理由</span>|
+                        <span>@Model[0].RecommendReason</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block mt40">
+            <div class="block-title">
+                <div class="title-content">
+                    美食阅读
+                </div>
+            </div>
+            <div class="book-block">
+                <div class="book-number">
+                    <span class="left">
+                        <span class="line"></span>
+                        <span class="point"></span>
+                    </span>
+                    <span class="center">2</span>
+                    <span class="right">
+                        <span class="point"></span>
+                        <span class="line"></span>
+                    </span>
+                </div>
+                <div class="book-name">
+                    @Model[1].BookName
+                </div>
+                <div class="book-content">
+                    <div class="book-content-block">
+                        <div class="book-img">
+                            <img src="@Model[1].ImageData" />
+                        </div>
+                        <div class="book-author">
+                            <div>@Model[1].Author</div>
+                            <div>（著）</div>
+                            <div>评分：@Model[1].Score</div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="book-des">
+                        <div>
+                            <span class="info">内容简介</span>|
+                        <span>@Model[1].BookDes</span>
+                        </div>
+                        <div class="mt20">
+                            <span class="info">推荐理由</span>|
+                        <span>@Model[1].RecommendReason</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block mt40">
+            <div class="block-title">
+                <div class="title-content">
+                    蔬果阅读
+                </div>
+            </div>
+            <div class="book-block">
+                <div class="book-number">
+                    <span class="left">
+                        <span class="line"></span>
+                        <span class="point"></span>
+                    </span>
+                    <span class="center">3</span>
+                    <span class="right">
+                        <span class="point"></span>
+                        <span class="line"></span>
+                    </span>
+                </div>
+                <div class="book-name">
+                    @Model[2].BookName
+                </div>
+                <div class="book-content">
+                    <div class="book-content-block">
+                        <div class="book-img">
+                            <img src="@Model[2].ImageData" />
+                        </div>
+                        <div class="book-author">
+                            <div>@Model[2].Author</div>
+                            <div>（著）</div>
+                            <div>评分：@Model[2].Score</div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="book-des">
+                        <div>
+                            <span class="info">内容简介</span>|
+                        <span>@Model[2].BookDes</span>
+                        </div>
+                        <div class="mt20">
+                            <span class="info">推荐理由</span>|
+                        <span>@Model[2].RecommendReason</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block mt40">
+            <div class="block-title">
+                <div class="title-content">
+                    甜品阅读
+                </div>
+            </div>
+            <div class="book-block">
+                <div class="book-number">
+                    <span class="left">
+                        <span class="line"></span>
+                        <span class="point"></span>
+                    </span>
+                    <span class="center">4</span>
+                    <span class="right">
+                        <span class="point"></span>
+                        <span class="line"></span>
+                    </span>
+                </div>
+                <div class="book-name">
+                    @Model[3].BookName
+                </div>
+                <div class="book-content">
+                    <div class="book-content-block">
+                        <div class="book-img">
+                            <img src="@Model[3].ImageData" />
+                        </div>
+                        <div class="book-author">
+                            <div>@Model[3].Author</div>
+                            <div>（著）</div>
+                            <div>评分：@Model[3].Score</div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="book-des">
+                        <div>
+                            <span class="info">内容简介</span>|
+                        <span>@Model[3].BookDes</span>
+                        </div>
+                        <div class="mt20">
+                            <span class="info">推荐理由</span>|
+                        <span>@Model[3].RecommendReason</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom mt40">
+            <div class="block-title">
+                <div class="title-content">
+                    <div style="font-weight: 700; color: rgb(172, 53, 81);text-align:center;">👉小提示👈</div>
+                    书单所列图书均为高分好书，大家可放心阅读，也可将我们推荐给你的好友，我们也会为你的好友免费定制一份，希望大家共同进步~😍😍😍
+                </div>
+            </div>
+            <div class="dzsd"><strong style="box-sizing: border-box;">&nbsp;定·制·书·单</strong></div>
+            <div class="srwx"><span>请长按识别下方二维码加我们私人微信</span></div>
+            <div class="srwx"><span>24小时内，就会收到我们良心定制的书单一份</span></div>
+            <div class="ddpk">（如未及时通过，请等待片刻）</div>
+            <div class="ddpk">▼</div>
+            <div class="wxbg">
+                <div>
+                    <img style="width: 100%; height: auto; /* margin-top: 10px; */" src="@(wxewm != null ? wxewm.WXBG : "")">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    <script src="../../Content/assets/js/jquery.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+$.ajax({
+    url: '/Home/GetWXConfig?url=' + location.href,
+	type:'get',
+	success: function (data) {
+	    debugger;
+	    wx.config({
+	        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	        appId: data.data.appId, // 必填，公众号的唯一标识
+	        timestamp: data.data.timestamp, // 必填，生成签名的时间戳
+	        nonceStr: data.data.nonceStr, // 必填，生成签名的随机串
+	        signature: data.data.signature,// 必填，签名，见附录1
+	        jsApiList: data.data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	    });
+
+	    wx.ready(function () {
+	        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+	        debugger;
+	        wx.onMenuShareTimeline({
+	            title: '书单分享', // 分享标题
+	            link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+	            imgUrl: 'http://www.learnercode.com/Content/wxbg.png', // 分享图标
+	            desc: '欢迎！',
+	            success: function () {
+	                alert("success");
+	                // 用户确认分享后执行的回调函数
+	            },
+	            cancel: function () {
+	                alert("fail");
+	                // 用户取消分享后执行的回调函数
+	            }
+	        });
+	    });
+
+	}
+});
+
+
+</script>

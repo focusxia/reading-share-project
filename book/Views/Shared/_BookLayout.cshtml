@@ -1,0 +1,256 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="../../Content/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="../../Content/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="../../Content/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="../../Content/assets/css/admin.css">
+    <link rel="stylesheet" href="../../Content/assets/css/app.css">
+    <script src="../../Content/assets/js/jquery.min.js"></script>
+    <script src="../../Content/assets/js/amazeui.min.js"></script>
+    <script src="../../Content/assets/js/app.js"></script>
+    <link href="../../Content/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        #loading {
+            background-color: rgba(0,0,0,0.8);
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 9999;
+            margin-top: 0px;
+            top: 0px;
+            display: none;
+        }
+
+        #loading-center-absolute {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            height: 20px;
+            width: 100px;
+            margin-top: -10px;
+            margin-left: -50px;
+        }
+
+        .object {
+            width: 20px;
+            height: 20px;
+            background-color: #FFF;
+            -moz-border-radius: 50% 50% 50% 50%;
+            -webkit-border-radius: 50% 50% 50% 50%;
+            border-radius: 50% 50% 50% 50%;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            position: absolute;
+        }
+
+        #object_one {
+            -webkit-animation: object 2s linear infinite;
+            animation: object 2s linear infinite;
+        }
+
+        #object_two {
+            -webkit-animation: object 2s linear infinite -.4s;
+            animation: object 2s linear infinite -.4s;
+        }
+
+        #object_three {
+            -webkit-animation: object 2s linear infinite -.8s;
+            animation: object 2s linear infinite -.8s;
+        }
+
+        #object_four {
+            -webkit-animation: object 2s linear infinite -1.2s;
+            animation: object 2s linear infinite -1.2s;
+        }
+
+        #object_five {
+            -webkit-animation: object 2s linear infinite -1.6s;
+            animation: object 2s linear infinite -1.6s;
+        }
+
+        @@-webkit-keyframes object {
+            0% {
+                left: 100px;
+                top: 0;
+            }
+
+            80% {
+                left: 0;
+                top: 0;
+            }
+
+            85% {
+                left: 0;
+                top: -20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            90% {
+                width: 40px;
+                height: 15px;
+            }
+
+            95% {
+                left: 100px;
+                top: -20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            100% {
+                left: 100px;
+                top: 0;
+            }
+        }
+
+        @@keyframes object {
+            0% {
+                left: 100px;
+                top: 0;
+            }
+
+            80% {
+                left: 0;
+                top: 0;
+            }
+
+            85% {
+                left: 0;
+                top: -20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            90% {
+                width: 40px;
+                height: 15px;
+            }
+
+            95% {
+                left: 100px;
+                top: -20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            100% {
+                left: 100px;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+
+<div id="loading">
+    <div id="loading-center">
+        <div id="loading-center-absolute">
+            <div class="object" id="object_one"></div>
+            <div class="object" id="object_two" style="left: 20px;"></div>
+            <div class="object" id="object_three" style="left: 40px;"></div>
+            <div class="object" id="object_four" style="left: 60px;"></div>
+            <div class="object" id="object_five" style="left: 80px;"></div>
+        </div>
+    </div>
+</div>
+<body data-type="generalComponents">
+    <header class="am-topbar am-topbar-inverse admin-header">
+        <div class="am-topbar-brand">
+            <a href="javascript:;" class="tpl-logo">
+                <img src="../../Content/assets/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right">
+        </div>
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+                <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen" class="tpl-header-list-link"><span class="am-icon-arrows-alt"></span><span class="admin-fullText">开启全屏</span></a></li>
+
+                <li><a href="/Home/LogOut" class="tpl-header-list-link"><span class="">退出登录</span></a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="tpl-page-container tpl-page-header-fixed">
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title">
+                我的列表
+            </div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    <li class="tpl-left-nav-item">
+                        <a href="/Home/BookList" class="nav-link active">
+                            <i class="am-icon-home"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <!-- 打开状态 a 标签添加 active 即可   -->
+                        <a href="javascript:;" class="nav-link tpl-left-nav-link-list active">
+                            <i class="am-icon-table"></i>
+                            <span>表格</span>
+                            <!-- 列表打开状态的i标签添加 tpl-left-nav-more-ico-rotate 图表即90°旋转  -->
+                            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right tpl-left-nav-more-ico-rotate"></i>
+                        </a>
+                        <ul class="tpl-left-nav-sub-menu" style="display: block">
+                            <li>
+                                <a href="/Home/BookList" class="active">
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>书籍列表</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Home/BookPageList" class="active">
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>书单列表</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Home/GetWXBG" class="active">
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>书单二维码配置</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/Home/GetLJ" class="active">
+                                    <i class="am-icon-angle-right"></i>
+                                    <span>链接内容配置</span>
+                                    <i class="am-icon-star tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @*                    <li class="tpl-left-nav-item">
+                        <a href="/Home/Login" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-key"></i>
+                            <span>登录</span>
+
+                        </a>
+                    </li>*@
+                </ul>
+            </div>
+        </div>
+        @RenderBody()
+    </div>
+</body>
+<script src="../../Content/dist/js/bootstrap.min.js"></script>
+<script src="../../Content/bootstrap-paginator.js"></script>
+</html>
